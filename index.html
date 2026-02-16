@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Innovation Lab Equipment & Inventory</title>
+    <style>
+      body { font-family: Arial, sans-serif; margin: 1rem; background: #f8f9fb; color: #1b1f24; }
+      h1 { margin-bottom: 0.5rem; }
+      .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; }
+      section, .panel { background: #fff; padding: 0.8rem; border-radius: 8px; border: 1px solid #dce1e8; }
+      form { display: grid; gap: 0.4rem; }
+      input, button, select { padding: 0.45rem; }
+      table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+      th, td { border: 1px solid #dce1e8; padding: 0.35rem; text-align: left; }
+      .ok { color: #157347; }
+      .error { color: #b02a37; }
+      .tables { display: grid; gap: 1rem; margin-top: 1rem; }
+      .meta { display: flex; gap: 1rem; align-items: center; }
+    </style>
+  </head>
+  <body>
+    <h1>Innovation Lab Equipment & Inventory System</h1>
+    <div class="meta">
+      <div>Overdue assets: <strong id="overdue-count">0</strong></div>
+      <button id="export-json">Export JSON</button>
+      <div id="message"></div>
+    </div>
+
+    <div class="grid">
+      <section>
+        <h2>Asset Catalog</h2>
+        <form id="asset-form">
+          <input name="assetId" placeholder="Asset ID" required />
+          <input name="category" placeholder="Category" required />
+          <input name="model" placeholder="Model" />
+          <input name="manufacturer" placeholder="Manufacturer" />
+          <input name="location" placeholder="Location" required />
+          <input name="assignedProject" placeholder="Project / Experiment" />
+          <input name="costCenter" placeholder="Cost Center" />
+          <input name="conditionScore" type="number" min="1" max="5" value="5" />
+          <input name="tags" placeholder="Tags (comma separated)" />
+          <button type="submit">Add Asset</button>
+        </form>
+      </section>
+
+      <section>
+        <h2>Check-out</h2>
+        <form id="checkout-form">
+          <input name="assetId" placeholder="Asset ID" required />
+          <input name="borrowedBy" placeholder="Borrowed By" required />
+          <input name="durationDays" type="number" min="1" value="1" />
+          <input name="conditionPhoto" placeholder="Condition Photo URL" required />
+          <button type="submit">Check Out</button>
+        </form>
+      </section>
+
+      <section>
+        <h2>Check-in</h2>
+        <form id="checkin-form">
+          <input name="assetId" placeholder="Asset ID" required />
+          <input name="conditionScore" type="number" min="1" max="5" value="5" />
+          <input name="repairNotes" placeholder="Repair Notes" />
+          <button type="submit">Check In</button>
+        </form>
+      </section>
+
+      <section>
+        <h2>Reservations</h2>
+        <form id="reservation-form">
+          <input name="assetId" placeholder="Asset ID" required />
+          <input name="reservedBy" placeholder="Reserved By" required />
+          <input name="startAt" type="datetime-local" required />
+          <input name="endAt" type="datetime-local" required />
+          <button type="submit">Create Reservation</button>
+        </form>
+      </section>
+
+      <section>
+        <h2>Maintenance</h2>
+        <form id="maintenance-form">
+          <input name="assetId" placeholder="Asset ID" required />
+          <input name="scheduledFor" type="date" required />
+          <input name="type" placeholder="Preventive / Repair" required />
+          <input name="vendor" placeholder="Vendor" />
+          <input name="cost" type="number" min="0" step="0.01" placeholder="Cost" />
+          <button type="submit">Schedule Maintenance</button>
+        </form>
+      </section>
+
+      <section>
+        <h2>Procurement Request</h2>
+        <form id="procurement-form">
+          <input name="requestedBy" placeholder="Requested By" required />
+          <input name="itemName" placeholder="Asset Name" required />
+          <input name="justification" placeholder="Justification" required />
+          <input name="costCenter" placeholder="Cost Center" required />
+          <button type="submit">Submit Request</button>
+        </form>
+      </section>
+    </div>
+
+    <div class="tables">
+      <div class="panel"><h2>Assets</h2><table><thead><tr><th>ID</th><th>Category</th><th>Model</th><th>Location</th><th>Project</th><th>Cost Center</th><th>Status</th><th>Condition</th></tr></thead><tbody id="asset-rows"></tbody></table></div>
+      <div class="panel"><h2>Active Checkouts</h2><table><thead><tr><th>Asset</th><th>User</th><th>Checked Out</th><th>Due</th></tr></thead><tbody id="checkout-rows"></tbody></table></div>
+      <div class="panel"><h2>Reservations</h2><table><thead><tr><th>Asset</th><th>User</th><th>Start</th><th>End</th><th>Waitlisted</th></tr></thead><tbody id="reservation-rows"></tbody></table></div>
+      <div class="panel"><h2>Maintenance Tasks</h2><table><thead><tr><th>Asset</th><th>Scheduled</th><th>Type</th><th>Vendor</th><th>Cost</th><th>Status</th></tr></thead><tbody id="maintenance-rows"></tbody></table></div>
+      <div class="panel"><h2>Procurement</h2><table><thead><tr><th>User</th><th>Item</th><th>Cost Center</th><th>Status</th></tr></thead><tbody id="procurement-rows"></tbody></table></div>
+      <div class="panel"><h2>Audit Log (latest 25)</h2><table><thead><tr><th>Timestamp</th><th>Action</th></tr></thead><tbody id="audit-rows"></tbody></table></div>
+    </div>
+
+    <script type="module" src="/src/app.js"></script>
+  </body>
+</html>
