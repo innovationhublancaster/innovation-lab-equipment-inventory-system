@@ -105,13 +105,22 @@ export function createInventoryStore(initialState = {}) {
     toJSON: () => JSON.stringify(state),
     hydrate: (serialized) => {
       if (!serialized) return;
-      const parsed = JSON.parse(serialized);
-      state.assets = parsed.assets || [];
-      state.checkouts = parsed.checkouts || [];
-      state.reservations = parsed.reservations || [];
-      state.maintenance = parsed.maintenance || [];
-      state.procurement = parsed.procurement || [];
-      state.auditLog = parsed.auditLog || [];
+      try {
+        const parsed = JSON.parse(serialized);
+        state.assets = Array.isArray(parsed.assets) ? parsed.assets : [];
+        state.checkouts = Array.isArray(parsed.checkouts) ? parsed.checkouts : [];
+        state.reservations = Array.isArray(parsed.reservations) ? parsed.reservations : [];
+        state.maintenance = Array.isArray(parsed.maintenance) ? parsed.maintenance : [];
+        state.procurement = Array.isArray(parsed.procurement) ? parsed.procurement : [];
+        state.auditLog = Array.isArray(parsed.auditLog) ? parsed.auditLog : [];
+      } catch {
+        state.assets = [];
+        state.checkouts = [];
+        state.reservations = [];
+        state.maintenance = [];
+        state.procurement = [];
+        state.auditLog = [];
+      }
     }
   };
 }

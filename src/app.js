@@ -58,7 +58,26 @@ byId("export-json").addEventListener("click", () => {
 });
 
 const renderRows = (id, rows, fields) => {
-  byId(id).innerHTML = rows.map((row) => `<tr>${fields.map((field) => `<td>${row[field] ?? ""}</td>`).join("")}</tr>`).join("") || `<tr><td colspan="${fields.length}">No records</td></tr>`;
+  const body = byId(id);
+  body.textContent = "";
+  if (!rows.length) {
+    const row = document.createElement("tr");
+    const cell = document.createElement("td");
+    cell.colSpan = fields.length;
+    cell.textContent = "No records";
+    row.appendChild(cell);
+    body.appendChild(row);
+    return;
+  }
+  rows.forEach((data) => {
+    const row = document.createElement("tr");
+    fields.forEach((field) => {
+      const cell = document.createElement("td");
+      cell.textContent = String(data[field] ?? "");
+      row.appendChild(cell);
+    });
+    body.appendChild(row);
+  });
 };
 
 function render() {
